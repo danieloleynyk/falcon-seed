@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Docker Debugger" type="GoRemoteDebugConfigurationType" factoryName="Go Remote" port="40000">
+    <option name="disconnectOption" value="STOP" />
+    <disconnect value="STOP" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Docker Restart" run_configuration_type="ShConfigurationType" />
+    </method>
+  </configuration>
+</component>
