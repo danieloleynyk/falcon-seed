@@ -1,3 +1,3 @@
-module go-debug-container
+module go-seed
 
 go 1.15

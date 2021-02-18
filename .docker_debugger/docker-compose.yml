@@ -1,8 +1,8 @@
 version: "3.5"
 
 services:
-  web:
-    container_name: dockerdev
+  dev-container:
+    container_name: dev-container
     build: ./
     volumes:
       - ../:/project
