@@ -1,3 +1,3 @@
-module goDebugContainer
+module go-debug-container
 
 go 1.15

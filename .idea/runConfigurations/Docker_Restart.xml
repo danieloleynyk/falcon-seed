@@ -10,7 +10,7 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="EXECUTE_IN_TERMINAL" value="true" />
     <envs>
-      <env name="CONTAINER_NAME" value="golang-docker" />
+      <env name="CONTAINER_NAME" value="dockerdev" />
     </envs>
     <method v="2" />
   </configuration>
