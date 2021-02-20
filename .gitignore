@@ -16,7 +16,7 @@
 vendor/
 
 # Goland
-.idea/*
+../../../.idea/vcs.xml
 !.idea/runConfigurations
 
 # Log files

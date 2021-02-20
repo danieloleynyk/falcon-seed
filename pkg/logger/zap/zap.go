@@ -20,7 +20,7 @@ type Logger struct {
 }
 
 // New instantiates new SugaredLogger logger
-func New(config *config.Logging) *Logger {
+func New(config *config.Logging) (*Logger, error) {
 	lumberjackLogger = &lumberjack.Logger{
 		Filename:   config.Path,
 		MaxSize:    config.MaxSize,
@@ -30,24 +30,31 @@ func New(config *config.Logging) *Logger {
 
 	cfg := zap.NewProductionConfig()
 	cfg.EncoderConfig.EncodeTime = SyslogTimeEncoder
-	zapLogger, _ := cfg.Build(zap.Hooks(lumberjackZapHook))
+	zapLogger, err := cfg.Build(zap.Hooks(lumberjackZapHook))
+	if err != nil {
+		return nil, err
+	}
 
 	defer zapLogger.Sync() // flushes buffer, if any
 	return &Logger{
 		logger: zapLogger.Sugar(),
-	}
+	}, nil
 }
 
-func (zap *Logger) Info(msg string) {
-	zap.logger.Info(msg)
+func (zap *Logger) Info(msg string, keysAndValues ...interface{}) {
+	zap.logger.Infow(msg, keysAndValues...)
 }
 
-func (zap *Logger) Debug(msg string) {
-	zap.logger.Debug(msg)
+func (zap *Logger) Debug(msg string, keysAndValues ...interface{}) {
+	zap.logger.Debugw(msg, keysAndValues)
 }
 
 func (zap *Logger) Error(err error) {
 	zap.logger.Error(err)
+}
+
+func (zap *Logger) Fatal(err error) {
+	zap.logger.Fatal(err)
 }
 
 // Log logs using the initialized logger
@@ -78,6 +85,7 @@ func SyslogTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 }
 
 func lumberjackZapHook(e zapcore.Entry) error {
+	e.Time = e.Time.UTC()
 	lumberjackLogger.Write([]byte(fmt.Sprintf("%+v\n", e)))
 	return nil
 }

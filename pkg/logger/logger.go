@@ -13,8 +13,9 @@ const (
 
 // Logger represents logging interface
 type Logger interface {
-	Info(string)
-	Debug(string)
+	Info(msg string, keysAndValues ...interface{})
+	Debug(msg string, keysAndValues ...interface{})
 	Error(error)
+	Fatal(error)
 	LogRequest(echo.Context, string, string, error, map[string]interface{})
 }
