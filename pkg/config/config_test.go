@@ -33,6 +33,12 @@ func TestLoad(t *testing.T) {
 			name: "Success",
 			path: "testdata/config.testdata.yaml",
 			wantData: &config.Configuration{
+				Logging: &config.Logging{
+					Path:       "./logging/log.log",
+					MaxSize:    1,
+					MaxBackups: 3,
+					MaxAge:     7,
+				},
 				DB: &config.Database{
 					LogQueries: true,
 					Timeout:    20,

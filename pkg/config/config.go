@@ -25,10 +25,22 @@ func Load(path string) (*Configuration, error) {
 
 // Configuration holds data necessary for configuring application
 type Configuration struct {
-	Server *Server      `yaml:"server,omitempty"`
-	DB     *Database    `yaml:"database,omitempty"`
-	JWT    *JWT         `yaml:"jwt,omitempty"`
-	App    *Application `yaml:"application,omitempty"`
+	Logging *Logging     `yaml:"logging,omitempty"`
+	Server  *Server      `yaml:"server,omitempty"`
+	DB      *Database    `yaml:"database,omitempty"`
+	JWT     *JWT         `yaml:"jwt,omitempty"`
+	App     *Application `yaml:"application,omitempty"`
+}
+
+// Logging holds data necessary for logger configuration
+type Logging struct {
+	Path string `yaml:"path,omitempty"`
+	// Megabytes
+	MaxSize int `yaml:"max_size,omitempty"`
+	// Files
+	MaxBackups int `yaml:"max_backups,omitempty"`
+	// Days
+	MaxAge int `yaml:"max_age,omitempty"`
 }
 
 // Database holds data necessary for database configuration

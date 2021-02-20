@@ -1,12 +1,17 @@
 package zap
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"go-seed/pkg/config"
 	"go-seed/pkg/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"time"
 )
+
+var lumberjackLogger *lumberjack.Logger
 
 // Log represents SugaredLogger, If you want to increase the performance consider
 // using Logger instead
@@ -15,11 +20,18 @@ type Logger struct {
 }
 
 // New instantiates new SugaredLogger logger
-func New() *Logger {
+func New(config *config.Logging) *Logger {
+	lumberjackLogger = &lumberjack.Logger{
+		Filename:   config.Path,
+		MaxSize:    config.MaxSize,
+		MaxBackups: config.MaxBackups,
+		MaxAge:     config.MaxAge,
+	}
+
 	cfg := zap.NewProductionConfig()
 	cfg.EncoderConfig.EncodeTime = SyslogTimeEncoder
+	zapLogger, _ := cfg.Build(zap.Hooks(lumberjackZapHook))
 
-	zapLogger, _ := cfg.Build()
 	defer zapLogger.Sync() // flushes buffer, if any
 	return &Logger{
 		logger: zapLogger.Sugar(),
@@ -63,4 +75,9 @@ func (zap *Logger) LogRequest(ctx echo.Context, source, msg string, err error, p
 
 func SyslogTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.UTC().String())
+}
+
+func lumberjackZapHook(e zapcore.Entry) error {
+	lumberjackLogger.Write([]byte(fmt.Sprintf("%+v\n", e)))
+	return nil
 }

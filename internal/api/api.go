@@ -6,8 +6,10 @@ import (
 )
 
 func Start(config *config.Configuration) error {
-	log := zap.New()
-	log.Info("initialized logger successfully")
+	log := zap.New(config.Logging)
+	for {
+		log.Info("initialized logger successfully")
+	}
 
 	return nil
 }

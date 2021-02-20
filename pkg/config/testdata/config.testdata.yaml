@@ -1,3 +1,9 @@
+logging:
+  path: ./logging/log.log
+  max_size: 1
+  max_backups: 3
+  max_age: 7
+
 database:
   log_queries: true
   timeout_seconds: 20
