@@ -1,8 +1,8 @@
 package api
 
 import (
-	"go-seed/pkg/config"
-	"go-seed/pkg/logger/zap"
+	"falcon-seed/pkg/config"
+	"falcon-seed/pkg/logger/zap"
 )
 
 func Start(config *config.Configuration) error {

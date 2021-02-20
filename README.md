@@ -1,4 +1,4 @@
-# go-seed
+# falcon-seed
 Production ready golang application template, 
 with a containerized dev environment.
 

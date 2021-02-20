@@ -1,10 +1,10 @@
 package zap
 
 import (
+	"falcon-seed/pkg/config"
+	"falcon-seed/pkg/logger"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"go-seed/pkg/config"
-	"go-seed/pkg/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"

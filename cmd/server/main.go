@@ -1,9 +1,9 @@
 package main
 
 import (
+	"falcon-seed/internal/api"
+	"falcon-seed/pkg/config"
 	"flag"
-	"go-seed/internal/api"
-	"go-seed/pkg/config"
 )
 
 func main() {

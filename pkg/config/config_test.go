@@ -1,7 +1,7 @@
 package config_test
 
 import (
-	"go-seed/pkg/config"
+	"falcon-seed/pkg/config"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

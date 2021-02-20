@@ -1,4 +1,4 @@
-module go-seed
+module falcon-seed
 
 go 1.15
 
