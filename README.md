@@ -2,6 +2,11 @@
 Production ready golang application template, 
 with a containerized dev environment.
 
+###### Currently Supported
+- Logging using zap + lumberjack
+- Config loading (yaml)
+- Containerized dev environment for goland
+
 Currently I'm supporting debugging using goland.
 
 Roadmap:
@@ -11,4 +16,6 @@ Roadmap:
   - Basic cicd template for: 
     * gitlab ci
     * github actions
-    
+  - Config loading using 
+    * JSON
+    * .env 
