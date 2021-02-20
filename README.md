@@ -7,8 +7,6 @@ with a containerized dev environment.
 - Config loading (yaml)
 - Containerized dev environment for goland
 
-Currently I'm supporting debugging using goland.
-
 Roadmap:
   - Add vscode debug support
   - Live Reload using delve
