@@ -19,3 +19,6 @@ with a containerized dev environment.
     * .env
   - JWT
     * Add redis support for refresh tokens
+  - Code generators
+    * Makefile (build, test)
+    * CLI tool for service generations
