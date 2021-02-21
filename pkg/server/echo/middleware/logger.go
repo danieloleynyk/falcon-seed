@@ -3,6 +3,7 @@ package middleware
 import (
 	"falcon-seed/pkg/logger"
 	"github.com/labstack/echo/v4"
+	"strconv"
 	"time"
 )
 
@@ -38,7 +39,7 @@ func Logger(logger logger.Logger) echo.MiddlewareFunc {
 				"method", req.Method,
 				"path", path,
 				"status", res.Status,
-				"latency", stop.Sub(start).String(),
+				"latency", strconv.FormatInt(int64(stop.Sub(start)), 10),
 			)
 
 			return err
