@@ -1,9 +1,9 @@
-package echo
+package server
 
 import (
 	"context"
 	"falcon-seed/pkg/logger"
-	"falcon-seed/pkg/server/echo/middleware"
+	"falcon-seed/pkg/server/middleware"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
@@ -14,8 +14,8 @@ import (
 )
 
 type Server struct {
-	echo   *echo.Echo
-	logger logger.Logger
+	*echo.Echo
+	logger.Logger
 }
 
 // Config represents server specific config
@@ -38,8 +38,8 @@ func New(logger logger.Logger) *Server {
 	e.GET("/", healthCheck)
 
 	return &Server{
-		echo:   e,
-		logger: logger,
+		e,
+		logger,
 	}
 }
 
@@ -50,13 +50,13 @@ func (server *Server) Start(cfg *Config) {
 		ReadTimeout:  time.Duration(cfg.ReadTimeoutSeconds) * time.Second,
 		WriteTimeout: time.Duration(cfg.WriteTimeoutSeconds) * time.Second,
 	}
-	server.echo.Debug = cfg.Debug
+	server.Echo.Debug = cfg.Debug
 
 	// Start server
 	go func() {
-		server.logger.Info("starting server...")
-		if err := server.echo.StartServer(httpServer); err != nil {
-			server.logger.Info("shutting down the server")
+		server.Logger.Info("starting server...")
+		if err := server.Echo.StartServer(httpServer); err != nil {
+			server.Logger.Info("shutting down the server")
 		}
 	}()
 
@@ -68,8 +68,8 @@ func (server *Server) Start(cfg *Config) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	if err := server.echo.Shutdown(ctx); err != nil {
-		server.logger.Fatal(err)
+	if err := server.Echo.Shutdown(ctx); err != nil {
+		server.Logger.Fatal(err)
 	}
 }
 

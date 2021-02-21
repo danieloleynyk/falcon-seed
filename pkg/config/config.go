@@ -59,10 +59,14 @@ type Server struct {
 
 // JWT holds data necessary for JWT configuration
 type JWT struct {
+	AccessToken  *Token `yaml:"access_token,omitempty"`
+	RefreshToken *Token `yaml:"refresh_token,omitempty"`
+}
+
+// Token holds data necessary for jwt token configuration
+type Token struct {
 	MinSecretLength  int    `yaml:"min_secret_length,omitempty"`
 	DurationMinutes  int    `yaml:"duration_minutes,omitempty"`
-	RefreshDuration  int    `yaml:"refresh_duration_minutes,omitempty"`
-	MaxRefresh       int    `yaml:"max_refresh_minutes,omitempty"`
 	SigningAlgorithm string `yaml:"signing_algorithm,omitempty"`
 }
 

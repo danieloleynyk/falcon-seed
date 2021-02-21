@@ -15,11 +15,15 @@ server:
   write_timeout_seconds: 20
 
 jwt:
-  min_secret_length: 128
-  duration_minutes: 10
-  refresh_duration_minutes: 10
-  max_refresh_minutes: 144
-  signing_algorithm: HS384
+  access_token:
+    min_secret_length: 128
+    duration_minutes: 10
+    signing_algorithm: HS384
+
+  refresh_token:
+    min_secret_length: 128
+    duration_minutes: 10
+    signing_algorithm: HS384
 
 application:
   min_password_strength: 3

@@ -16,4 +16,6 @@ with a containerized dev environment.
     * github actions
   - Config loading using 
     * JSON
-    * .env 
+    * .env
+  - JWT
+    * Add redis support for refresh tokens

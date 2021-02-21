@@ -32,7 +32,13 @@ func Logger(logger logger.Logger) echo.MiddlewareFunc {
 				path = "/"
 			}
 
-			logger.Info("request received",
+			requestName := c.Get("request_name")
+
+			if requestName == nil {
+				requestName = "Unknown request"
+			}
+
+			logger.Info(requestName.(string)+" request was received",
 				"remote_ip", c.RealIP(),
 				"host", req.Host,
 				"uri", req.RequestURI,

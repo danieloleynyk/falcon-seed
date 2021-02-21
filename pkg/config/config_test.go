@@ -50,11 +50,16 @@ func TestLoad(t *testing.T) {
 					WriteTimeout: 20,
 				},
 				JWT: &config.JWT{
-					MinSecretLength:  128,
-					DurationMinutes:  10,
-					RefreshDuration:  10,
-					MaxRefresh:       144,
-					SigningAlgorithm: "HS384",
+					AccessToken: &config.Token{
+						MinSecretLength:  128,
+						DurationMinutes:  10,
+						SigningAlgorithm: "HS384",
+					},
+					RefreshToken: &config.Token{
+						MinSecretLength:  128,
+						DurationMinutes:  10,
+						SigningAlgorithm: "HS384",
+					},
 				},
 				App: &config.Application{
 					MinPasswordStr: 3,

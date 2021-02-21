@@ -1,9 +1,13 @@
 package api
 
 import (
+	"falcon-seed/internal/auth"
+	"falcon-seed/pkg/auth/jwt"
+	"falcon-seed/pkg/auth/rbac"
 	"falcon-seed/pkg/config"
 	"falcon-seed/pkg/logger/zap"
-	"falcon-seed/pkg/server/echo"
+	"falcon-seed/pkg/server"
+	"falcon-seed/pkg/server/middleware"
 )
 
 func Start(config *config.Configuration) error {
@@ -14,9 +18,19 @@ func Start(config *config.Configuration) error {
 
 	logger.Info("initialized logger successfully")
 
-	server := echo.New(logger)
+	rbacService := rbac.Service{}
 
-	server.Start(&echo.Config{
+	jwtService, err := jwt.New(config.JWT)
+	if err != nil {
+		logger.Error(err)
+		return err
+	}
+
+	s := server.New(logger)
+
+	auth.NewHTTP(auth.NewService(jwtService, rbacService), s.Echo, middleware.Auth(jwtService))
+
+	s.Start(&server.Config{
 		Port:                config.Server.Port,
 		ReadTimeoutSeconds:  config.Server.ReadTimeout,
 		WriteTimeoutSeconds: config.Server.WriteTimeout,

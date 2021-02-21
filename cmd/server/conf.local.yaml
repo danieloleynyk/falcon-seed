@@ -1,26 +1,30 @@
 logging:
-  path: ./server.log
+  path: ./logging/log.log
   max_size: 1
   max_backups: 3
   max_age: 7
 
 database:
   log_queries: true
-  timeout_seconds: 5
+  timeout_seconds: 20
 
 server:
   port: 8080
   debug: true
-  read_timeout_seconds: 10
-  write_timeout_seconds: 5
+  read_timeout_seconds: 15
+  write_timeout_seconds: 20
 
 jwt:
-  duration_minutes: 15
-  refresh_duration_minutes: 15
-  max_refresh_minutes: 1440
-  signing_algorithm: HS256
-  min_secret_length: 64
+  access_token:
+    min_secret_length: 128
+    duration_minutes: 10
+    signing_algorithm: HS384
+
+  refresh_token:
+    min_secret_length: 128
+    duration_minutes: 300
+    signing_algorithm: HS384
 
 application:
-  min_password_strength: 1
-  swagger_ui_path: assets/swaggerui
+  min_password_strength: 3
+  swagger_ui_path: assets/swagger
