@@ -1,7 +1,8 @@
 package api
 
 import (
-	"falcon-seed/internal/auth"
+	"falcon-seed/internal/api/auth"
+	"falcon-seed/internal/api/user"
 	"falcon-seed/pkg/auth/jwt"
 	"falcon-seed/pkg/auth/rbac"
 	"falcon-seed/pkg/config"
@@ -27,8 +28,10 @@ func Start(config *config.Configuration) error {
 	}
 
 	s := server.New()
+	v1 := s.Group("/v1", middleware.Auth(jwtService))
 
-	auth.NewHTTP(auth.NewService(jwtService, rbacService), s.Echo, middleware.Auth(jwtService))
+	auth.NewHTTP(auth.NewService(jwtService, rbacService), s.Echo)
+	user.NewHTTP(user.NewService(), v1)
 
 	s.Start(&server.Config{
 		Port:                config.Server.Port,

@@ -7,22 +7,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Service represents auth service interface
-type Service interface {
-	Authenticate(echo.Context, string, string) (jwt.AuthToken, error)
-	Refresh(echo.Context, string) (string, error)
-}
-
-// Auth represents auth application service
-type Auth struct {
+// Service represents auth application service
+type Service struct {
 	tokenGenerator TokenGenerator
 	rbac           RBAC
 	refreshTokens  map[string]string
 }
 
 // NewService creates new auth service
-func NewService(tokenGenerator TokenGenerator, rbac RBAC) Auth {
-	return Auth{
+func NewService(tokenGenerator TokenGenerator, rbac RBAC) Service {
+	return Service{
 		tokenGenerator: tokenGenerator,
 		rbac:           rbac,
 		refreshTokens:  map[string]string{},
@@ -40,8 +34,8 @@ type RBAC interface {
 	GetUser(echo.Context) rbac.User
 }
 
-func (a Auth) Authenticate(context echo.Context, user string, password string) (jwt.AuthToken, error) {
-	accessToken, err := a.tokenGenerator.GenerateAccessToken(struct {
+func (service Service) Authenticate(context echo.Context, user string, password string) (jwt.AuthToken, error) {
+	accessToken, err := service.tokenGenerator.GenerateAccessToken(struct {
 		Username    string
 		Email       string
 		AccessLevel rbac.AccessRole
@@ -54,12 +48,12 @@ func (a Auth) Authenticate(context echo.Context, user string, password string) (
 		return jwt.AuthToken{}, errors.New("unauthorized")
 	}
 
-	refreshToken, err := a.tokenGenerator.GenerateRefreshToken(user)
+	refreshToken, err := service.tokenGenerator.GenerateRefreshToken(user)
 	if err != nil {
 		return jwt.AuthToken{}, errors.New("unauthorized")
 	}
 
-	a.refreshTokens[refreshToken] = user
+	service.refreshTokens[refreshToken] = user
 
 	return jwt.AuthToken{
 		AccessToken:  accessToken,
@@ -67,14 +61,14 @@ func (a Auth) Authenticate(context echo.Context, user string, password string) (
 	}, nil
 }
 
-func (a Auth) Refresh(context echo.Context, refreshToken string) (string, error) {
-	u, exist := a.refreshTokens[refreshToken]
+func (service Service) Refresh(context echo.Context, refreshToken string) (string, error) {
+	u, exist := service.refreshTokens[refreshToken]
 
 	if !exist {
 		return "", errors.New("refresh token doesn't exist")
 	}
 
-	token, err := a.tokenGenerator.GenerateAccessToken(struct {
+	token, err := service.tokenGenerator.GenerateAccessToken(struct {
 		Username    string
 		Email       string
 		AccessLevel rbac.AccessRole

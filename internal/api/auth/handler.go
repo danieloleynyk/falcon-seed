@@ -48,7 +48,7 @@ func (httpHandler *HTTP) RegisterHandlers(
 }
 
 // NewHTTP creates new auth http service
-func NewHTTP(service Service, e *echo.Echo, mw echo.MiddlewareFunc) {
+func NewHTTP(service Service, e *echo.Echo) {
 	h := HTTP{service}
 	h.RegisterHandlers(e.Group("/auth"))
 }
@@ -63,11 +63,11 @@ func (httpHandler *HTTP) login(context echo.Context) error {
 
 	creds := new(credentials)
 	if err := context.Bind(creds); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 	token, err := httpHandler.service.Authenticate(context, creds.Username, creds.Password)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
 	return context.JSON(http.StatusOK, token)
 }
@@ -77,7 +77,7 @@ func (httpHandler *HTTP) refresh(context echo.Context) error {
 
 	token, err := httpHandler.service.Refresh(context, context.Param("token"))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusForbidden, "error generating new token")
+		return echo.NewHTTPError(http.StatusForbidden)
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{

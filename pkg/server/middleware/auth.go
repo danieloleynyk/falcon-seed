@@ -20,14 +20,14 @@ func Auth(tokenParser TokenParser) echo.MiddlewareFunc {
 		return func(context echo.Context) error {
 			token, err := tokenParser.ParseAccessToken(context.Request().Header.Get("Authorization"))
 			if err != nil || !token.Valid {
-				return context.NoContent(http.StatusUnauthorized)
+				return echo.NewHTTPError(http.StatusUnauthorized)
 			}
 
 			claims := token.Claims.(jwt.MapClaims)
 
-			username := claims["u"].(string)
-			email := claims["e"].(string)
-			role := rbac.AccessRole(claims["r"].(float64))
+			username := claims["user"].(string)
+			email := claims["email"].(string)
+			role := rbac.AccessRole(claims["role"].(float64))
 
 			context.Set("username", username)
 			context.Set("email", email)
