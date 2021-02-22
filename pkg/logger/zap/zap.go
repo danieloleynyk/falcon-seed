@@ -47,6 +47,8 @@ func New(config *config.Logging) (*Logger, error) {
 		return nil, err
 	}
 
+	zap.ReplaceGlobals(zapLogger)
+
 	defer zapLogger.Sync() // flushes buffer, if any
 	return &Logger{
 		logger: zapLogger.Sugar(),
@@ -90,4 +92,11 @@ func (zap *Logger) LogRequest(ctx echo.Context, source, msg string, err error, p
 
 func SyslogTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.UTC().String())
+}
+
+// GetLogger returns the global logger which was set to be the configured zap logger
+func GetLogger() logger.Logger {
+	return &Logger{
+		logger: zap.S(),
+	}
 }

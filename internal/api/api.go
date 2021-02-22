@@ -26,7 +26,7 @@ func Start(config *config.Configuration) error {
 		return err
 	}
 
-	s := server.New(logger)
+	s := server.New()
 
 	auth.NewHTTP(auth.NewService(jwtService, rbacService), s.Echo, middleware.Auth(jwtService))
 

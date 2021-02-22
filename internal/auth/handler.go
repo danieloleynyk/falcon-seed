@@ -84,11 +84,3 @@ func (httpHandler *HTTP) refresh(context echo.Context) error {
 		"token": token,
 	})
 }
-
-func (httpHandler *HTTP) me(c echo.Context) error {
-	user, err := httpHandler.service.Me(c)
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, user)
-}

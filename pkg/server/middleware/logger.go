@@ -1,14 +1,15 @@
 package middleware
 
 import (
-	"falcon-seed/pkg/logger"
+	"falcon-seed/pkg/logger/zap"
 	"github.com/labstack/echo/v4"
 	"strconv"
 	"time"
 )
 
 // Logger adds basic logging for each request
-func Logger(logger logger.Logger) echo.MiddlewareFunc {
+func Logger() echo.MiddlewareFunc {
+	logger := zap.GetLogger()
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			var err error

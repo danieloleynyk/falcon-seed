@@ -7,6 +7,7 @@ const (
 	LumberjackSinkName     = "lumberjack"
 )
 
+// lumberjackSink is used as handler for zap rotating file logs
 type lumberjackSink struct {
 	*lumberjack.Logger
 }

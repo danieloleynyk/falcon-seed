@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"falcon-seed/pkg/logger"
+	"falcon-seed/pkg/logger/zap"
 	"falcon-seed/pkg/server/middleware"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -15,7 +15,6 @@ import (
 
 type Server struct {
 	*echo.Echo
-	logger.Logger
 }
 
 // Config represents server specific config
@@ -27,24 +26,24 @@ type Config struct {
 }
 
 // New instantiates new Echo server
-func New(logger logger.Logger) *Server {
+func New() *Server {
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
 
-	e.Use(middleware.Logger(logger), echoMiddleware.Recover(),
+	e.Use(middleware.Logger(), echoMiddleware.Recover(),
 		middleware.CORS(), middleware.Headers())
 
 	e.GET("/", healthCheck)
 
 	return &Server{
 		e,
-		logger,
 	}
 }
 
 // Start starts echo server
 func (server *Server) Start(cfg *Config) {
+	logger := zap.GetLogger()
 	httpServer := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.Port),
 		ReadTimeout:  time.Duration(cfg.ReadTimeoutSeconds) * time.Second,
@@ -56,7 +55,7 @@ func (server *Server) Start(cfg *Config) {
 	go func() {
 		server.Logger.Info("starting server...")
 		if err := server.Echo.StartServer(httpServer); err != nil {
-			server.Logger.Info("shutting down the server")
+			logger.Info("shutting down the server")
 		}
 	}()
 
@@ -69,7 +68,7 @@ func (server *Server) Start(cfg *Config) {
 	defer cancel()
 
 	if err := server.Echo.Shutdown(ctx); err != nil {
-		server.Logger.Fatal(err)
+		logger.Fatal(err)
 	}
 }
 
