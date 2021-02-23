@@ -42,14 +42,19 @@ func New(config *config.Logging) (*Logger, error) {
 	cfg.EncoderConfig.EncodeTime = SyslogTimeEncoder
 	cfg.OutputPaths = append(cfg.OutputPaths, LumberjackOpaquePrefix+config.Path)
 
-	zapLogger, err := cfg.Build()
+	// Skips the first caller, used for determining the right caller inside the wrapper
+	callerSkip := zap.AddCallerSkip(1)
+
+	zapLogger, err := cfg.Build(callerSkip)
 	if err != nil {
 		return nil, err
 	}
 
 	zap.ReplaceGlobals(zapLogger)
+	zap.AddCaller()
 
 	defer zapLogger.Sync() // flushes buffer, if any
+
 	return &Logger{
 		logger: zapLogger.Sugar(),
 	}, nil

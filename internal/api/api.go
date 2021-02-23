@@ -31,7 +31,7 @@ func Start(config *config.Configuration) error {
 	v1 := s.Group("/v1", middleware.Auth(jwtService))
 
 	auth.NewHTTP(auth.NewService(jwtService, rbacService), s.Echo)
-	user.NewHTTP(user.NewService(), v1)
+	user.RegisterHandlers(v1)
 
 	s.Start(&server.Config{
 		Port:                config.Server.Port,
